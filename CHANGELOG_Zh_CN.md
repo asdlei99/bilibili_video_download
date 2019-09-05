@@ -2,6 +2,14 @@
 
 感谢大家的的使用以及建议！
 
+## 2019/09/05
+
+- 完善：视频文件名称格式化（感谢 @[gtjl12](https://github.com/gtjl12)，[issues](<https://github.com/evgo2017/bilibili_video_download/issues/10> ) )
+
+  ```
+  之前仅对视频文件夹名称进行了格式化，现补充对视频文件名称的格式化。
+  ```
+
 ## 2019/07/25
 
 - 新增：弹幕 Server > log.html

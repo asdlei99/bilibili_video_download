@@ -463,7 +463,7 @@
                 , pic = videoData.pic
                 , p = getParameter('p') ? getParameter('p') - 1 : 0
                 , { cid, part } = videoData.pages[p]
-                , dir = document.querySelector('#viewbox_report h1').title.replace(/[\\\/:?*"<>|]/ig, '-')
+                , dir = document.querySelector('#viewbox_report h1').title
 
             // 当前 Part
             G_info.one.info = await Video.part({ dir, id: aid, cid, part: part ? part : dir, pic })
@@ -478,7 +478,7 @@
 
             const { id, title: episode, longTitle: part } = window.__INITIAL_STATE__.epInfo
                 , cover = window.__INITIAL_STATE__.epInfo.cover
-                , dir = document.querySelector('.media-title').title.replace(/[\\\/:?*"<>|]/ig, '-')
+                , dir = document.querySelector('.media-title').title
                 , epList = window.__INITIAL_STATE__.epList
 
             // 单集
@@ -517,7 +517,6 @@
                     , medias = JSON.parse(res).data.medias
                 for (let media of medias) {
                     let { title: dir, id } = media
-                    dir = dir.replace(/[\\\/:?*"<>|]/ig, '-')
                     infos.push({ dir, id })
                 }
             }
@@ -550,7 +549,6 @@
                     , { list: bangumis } = JSON.parse(res).data
                 bangumis.forEach(bangumi => {
                     let { title: dir, season_id: id } = bangumi
-                    dir = dir.replace(/[\\\/:?*"<>|]/ig, '-')
                     infos.push({ dir, id })
                 })
             }
@@ -568,6 +566,8 @@
             let data = []
             infos.map(info => info.map(pages => pages.map(page => {
                 let { dir, url, out } = page
+                dir = dir.replace(/[\\\/:?*"<>|]/ig, '-')
+                out = out.replace(/[\\\/:?*"<>|]/ig, '-')
                 data.push(`${url}\r\n referer=${REFERER}\r\n dir=${BASEDIR}${dir}\r\n out=${out}\r\n`)
             })))
             return data
@@ -583,6 +583,9 @@
                     , rpcStatus = document.getElementById('rpcStatus')
                     , xhr = new XMLHttpRequest()
 
+                dir = dir.replace(/[\\\/:?*"<>|]/ig, '-')
+                out = out.replace(/[\\\/:?*"<>|]/ig, '-')
+
                 xhr.onloadstart = () => {
                     rpcStatus.innerHTML = '<p>发送请求</p>'
                 }
@@ -595,7 +598,7 @@
                 xhr.ontimeout = () => {
                     rpcStatus.innerHTML += '<p>请求超时</p>'
                 }
-                if(xml) {
+                if (xml) {
                     xhr.open('POST', `${DANMURPC}`, true)
                     xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
                     xhr.send(JSON.stringify({
@@ -632,6 +635,8 @@
             let data = {}
             infos.map(info => info.map(pages => pages.map(page => {
                 let { dir, id, cid, url, out } = page
+                dir = dir.replace(/[\\\/:?*"<>|]/ig, '-')
+                out = out.replace(/[\\\/:?*"<>|]/ig, '-')
                 data[id] = { dir, cid, url, out, BASEDIR, REFERER }
             })))
             return [JSON.stringify(data)]
