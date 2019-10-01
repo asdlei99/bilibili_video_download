@@ -2,6 +2,10 @@
 
 感谢大家的的使用以及建议！
 
+## 2019/10/01
+
+- 新增：显示/隐藏插件（感谢 @[lirener](<https://github.com/lirener> ))
+
 ## 2019/09/05
 
 - 完善：视频文件名称格式化（感谢 @[gtjl12](https://github.com/gtjl12)，[issues](<https://github.com/evgo2017/bilibili_video_download/issues/10> ) )

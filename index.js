@@ -10,7 +10,7 @@
 // @match       *://space.bilibili.com/*/favlist*
 // @match       *://space.bilibili.com/*/bangumi*
 // @match       *://space.bilibili.com/*/cinema*
-// @version     1.2.3.190905
+// @version     1.2.3.191001
 // @license     MIT License
 // @author      evgo2017
 // @copyright   evgo2017
@@ -35,6 +35,7 @@
             , ['DownCoverPicOnly', '0']
             , ['DownDanmu', '0']
             , ['DownDanmuOnly', '0']
+            , ['SHOWPLUG', '1']
         ])
     if (!localStorage.getItem(LocalStorageName)) {
         let evgoBvd = {}
@@ -62,6 +63,7 @@
         , DownCoverPicOnly
         , DownDanmu
         , DownDanmuOnly
+        , SHOWPLUG
     function refreshOptions() {
         let evgoBvd = JSON.parse(localStorage.getItem(LocalStorageName))
         BASEDIR = evgoBvd.BASEDIR
@@ -74,6 +76,7 @@
         DownCoverPicOnly = parseInt(evgoBvd.DownCoverPicOnly)
         DownDanmu = parseInt(evgoBvd.DownDanmu)
         DownDanmuOnly = parseInt(evgoBvd.DownDanmuOnly)
+        SHOWPLUG = parseInt(evgoBvd.SHOWPLUG)
     }
     refreshOptions()
 
@@ -231,6 +234,21 @@
             return getCookie('CURRENT_QUALITY')
         }
         return QN
+    }
+    /**
+     * 显示隐藏插件
+     */
+    function changeSHOWPLUG() {
+        let value = parseInt(getLocalStorage('SHOWPLUG')) === 1 ? 0 : 1
+        setLocalStorage('SHOWPLUG', value)
+        refreshOptions()
+        if(SHOWPLUG) {
+            document.body.removeChild(document.getElementById('bvdlist-show'))
+            Info.get()
+        } else {
+            document.body.removeChild(document.getElementById('bvdlist'))
+            UI.showPlug()
+        }
     }
 
     class Video {
@@ -418,7 +436,6 @@
                         , onclick: async function () {
                             await G_info.get()
                             let uiList = [
-                                {}
                                 , { textContent: '导出文件', download: 'download.session', onclick: G_info.all.Aria2, href: '#' }
                                 , { textContent: '远程 RPC', onclick: G_info.all.RPC }
                                 , { textContent: '原始数据', download: 'download.json', onclick: G_info.all.JSON }
@@ -645,6 +662,25 @@
 
     class UI {
         /**
+         * 显示插件
+         */
+        static showPlug() {
+            let dd = document.createElement('div')
+            dd.id = 'bvdlist-show'
+            dd.style.color = '#fff'
+            dd.style.backgroundColor = '#00A1D6'
+            dd.style.zIndex = 999
+            dd.style.position = 'fixed'
+            dd.style.fontSize = '1.2em'
+            dd.style.paddingLeft = '5px'
+            dd.style.paddingRight = '5px'
+            dd.textContent = '>'
+            dd.style.top = '50px'
+            dd.onclick = changeSHOWPLUG
+
+            document.body.appendChild(dd)
+        }
+        /**
          * 功能列表
          * @param {Array} types
          */
@@ -659,6 +695,7 @@
                         else UI.setting()
                     }
                 }
+                , { textContent: '隐藏插件', onclick: changeSHOWPLUG }
                 , { textContent: '帮助', href: 'https://github.com/evgo2017/bilibili_video_download' }
             ]
 
@@ -668,10 +705,10 @@
             dd.style.backgroundColor = '#00A1D6'
             dd.style.zIndex = 999
             dd.style.position = 'fixed'
-            dd.style.width = '76px'
+            dd.style.width = '78px'
             dd.style.fontSize = '1.2em'
             dd.textContent = '下载方式'
-            dd.style.top = '70px'
+            dd.style.top = '167px'
 
             let rpcStatus = document.createElement('p')
             rpcStatus.id = 'rpcStatus'
@@ -897,5 +934,9 @@
             return button
         }
     }
-    Info.get()
+    if(SHOWPLUG) {
+        Info.get()
+    } else {
+        UI.showPlug()
+    }
 })()
